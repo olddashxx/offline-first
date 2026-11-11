@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Gabriel Garay - PWA Móvil & Tablet (UPDS)</title>
+
+  <!-- ===== REDIRECCIÓN INTELIGENTE DISPOSITIVOS ===== -->
+  <script>
+    (function() {
+      var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('view') === 'mobile') return; // Forzar vista móvil en cualquier pantalla
+
+      var esDispositivoMovil = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(navigator.userAgent)
+        || (window.innerWidth <= 992 && ('ontouchstart' in window || navigator.maxTouchPoints > 0));
+
+      // Si entra desde una computadora con pantalla grande y sin touch, redirigir al index de PC
+      if (!esDispositivoMovil && window.innerWidth > 992) {
+        window.location.replace('index.html' + window.location.search);
+      }
+    })();
+  </script>
+
+  <!-- ===== METADATOS PWA ===== -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="description" content="Portafolio interactivo PWA de Gabriel Garay (Tec. Gabriel) optimizado exclusivamente para celulares y tablets.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Gabriel PWA">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Fuente estilo Videojuego / Cyberpunk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <!-- Estilos exclusivos para Celular y Tablet -->
+  <link rel="stylesheet" href="mobile-styles.css">
+</head>
+<body class="dark-mode">
+
+  <!-- ==================== LOBBY ESTILO VIDEOJUEGO ==================== -->
+  <div class="lobby">
+
+    <!-- FONDO: Carrusel a pantalla completa con las áreas de Gabriel -->
+    <div id="heroCarousel" class="carousel slide carousel-fade lobby-bg" data-bs-ride="carousel" data-bs-interval="6000" data-bs-pause="false">
+      <div class="carousel-inner">
+        <!-- Slide 1: Perfil Profesional & UPDS -->
+        <div class="carousel-item active">
+          <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Gabriel Garay - UPDS">
+          <div class="carousel-caption">
+            <h3>Gabriel Garay • Tec. Gabriel</h3>
+            <p>Ingeniería de Sistemas • 7º Semestre UPDS La Paz | Full Stack & PWA</p>
+          </div>
+        </div>
+        <!-- Slide 2: Gimnasio & Fuerza (6 días/semana) -->
+        <div class="carousel-item">
+          <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Gimnasio y Fuerza">
+          <div class="carousel-caption">
+            <h3>Gimnasio &amp; Fuerza (6 Días/Sem)</h3>
+            <p>Disciplina diaria de levantamiento de pesas, calistenia y superación</p>
+          </div>
+        </div>
+        <!-- Slide 3: Gaming Tekken 8 God of Destruction -->
+        <div class="carousel-item">
+          <img src="https://cdn.akamai.steamstatic.com/steam/apps/1778820/header.jpg" alt="Tekken 8 God of Destruction">
+          <div class="carousel-caption">
+            <h3>Tekken 8 • God of Destruction</h3>
+            <p>Gamer Competitivo Rango Máximo (GoD) con Jin &amp; Kazuya Mishima</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="lobby-shade"></div>
+
+    <!-- BARRA SUPERIOR: Perfil, stats rápidas y botones de control -->
+    <header class="lobby-top">
+      <div class="top-left">
+        <button data-hidratado="false" class="profile-chip" type="button" data-bs-toggle="modal" data-bs-target="#modalPerfil" aria-label="Abrir perfil de Gabriel">
+          <span class="avatar-frame">
+            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Gabriel Garay">
+          </span>
+          <span class="profile-info">
+            <strong class="profile-name">Gabriel Garay</strong>
+            <span class="lvl-row">
+              <span class="lvl-badge"><i class="fa-solid fa-graduation-cap"></i></span>
+              <span class="xp-bar"><span class="xp-fill"></span></span>
+            </span>
+            <small class="profile-sub">Ing. de Sistemas UPDS (7º Sem)</small>
+          </span>
+        </button>
+      </div>
+
+      <!-- Barra de datos rápidos (Tablets y modo apaisado) -->
+      <div class="currency-bar" aria-label="Estadísticas de Gabriel">
+        <span class="currency"><i class="fa-solid fa-laptop-code"></i> UPDS Sistemas</span>
+        <span class="currency"><i class="fa-solid fa-dumbbell"></i> Gym 6 Días</span>
+        <span class="currency"><i class="fa-solid fa-gamepad"></i> Tekken 8 GoD</span>
+        <span class="currency"><i class="fa-solid fa-location-dot"></i> La Paz, BO</span>
+      </div>
+
+      <!-- Botones superiores derechos: Refrescar PWA, Instalar, Tema, PC Switcher, Menú -->
+      <div class="top-right" id="contenedorMenu" data-hidratado="false">
+        <button data-hidratado="false" id="btnRefrescar" class="round-btn" type="button" aria-label="Refrescar app" title="Refrescar app">
+          <i class="fa-solid fa-rotate-right"></i>
+        </button>
+        <button data-hidratado="false" id="pwa-install-btn" class="round-btn install-btn" type="button" style="display:none;" aria-label="Instalar App" title="Instalar como App PWA">
+          <i class="fa-solid fa-download"></i>
+        </button>
+        <button data-hidratado="false" id="theme-toggle" class="round-btn" type="button" aria-label="Cambiar tema" title="Cambiar tema claro/oscuro">
+          <i class="fa-solid fa-sun" id="theme-icon"></i>
+        </button>
+        <a href="index.html?view=desktop" class="round-btn" aria-label="Ver versión Computadora" title="Cambiar a Versión Computadora (PC)">
+          <i class="fa-solid fa-desktop"></i>
+        </a>
+        <button data-hidratado="false" class="round-btn menu-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNav" aria-label="Menú principal">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- COLUMNA IZQUIERDA: Accesos rápidos con íconos de juego -->
+    <nav class="side-menu" aria-label="Accesos rápidos de Gabriel">
+      <button data-hidratado="false" class="lobby-icon-btn" type="button" data-bs-toggle="modal" data-bs-target="#modalPasatiempos">
+        <span class="icon-wrap"><i class="fa-solid fa-dumbbell"></i></span>
+        <span class="icon-label">Gimnasio</span>
+      </button>
+      <button data-hidratado="false" class="lobby-icon-btn" type="button" data-bs-toggle="modal" data-bs-target="#modalProyectos">
+        <span class="icon-wrap"><i class="fa-solid fa-code"></i></span>
+        <span class="icon-label">Proyectos</span>
+      </button>
+      <button data-hidratado="false" class="lobby-icon-btn" type="button" data-bs-toggle="modal" data-bs-target="#modalVideojuegos">
+        <span class="icon-wrap"><i class="fa-solid fa-gamepad"></i></span>
+        <span class="icon-label">Gaming</span>
+      </button>
+    </nav>
+
+    <!-- PANEL DERECHO DESPLEGABLE: Redes Oficiales & Amigos -->
+    <aside class="friends-panel" id="friends-panel" aria-label="Redes Oficiales de Gabriel Garay">
+      <button data-hidratado="false" class="panel-toggle" id="panel-toggle" type="button" aria-label="Mostrar u ocultar redes" aria-expanded="true">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+      <div class="friends-list">
+        <!-- WhatsApp Directo -->
+        <a class="friend-row" href="https://wa.me/59160120550" target="_blank" rel="noopener noreferrer">
+          <span class="friend-avatar fa-wa"><i class="fa-brands fa-whatsapp"></i></span>
+          <span class="friend-info">
+            <strong>WhatsApp Oficial</strong>
+            <span class="friend-rank"><i class="fa-solid fa-phone"></i> +591 60120550</span>
+            <span class="friend-status online"><i class="fa-solid fa-circle-check"></i> Disponible en línea</span>
+          </span>
+          <span class="friend-badge"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+        </a>
+        <!-- Facebook -->
+        <a class="friend-row" href="https://www.facebook.com/gabriel.garay.5458/?locale=es_LA" target="_blank" rel="noopener noreferrer">
+          <span class="friend-avatar fa-fb"><i class="fa-brands fa-facebook"></i></span>
+          <span class="friend-info">
+            <strong>Facebook Personal</strong>
+            <span class="friend-rank"><i class="fa-solid fa-user"></i> Gabriel Garay</span>
+            <span class="friend-status"><i class="fa-solid fa-globe"></i> Perfil Oficial</span>
+          </span>
+          <span class="friend-badge"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+        </a>
+        <!-- TikTok -->
+        <a class="friend-row" href="https://www.tiktok.com/@pou_gotico_culon" target="_blank" rel="noopener noreferrer">
+          <span class="friend-avatar fa-tk"><i class="fa-brands fa-tiktok"></i></span>
+          <span class="friend-info">
+            <strong>TikTok Oficial</strong>
+            <span class="friend-rank"><i class="fa-solid fa-video"></i> @pou_gotico_culon</span>
+            <span class="friend-status"><i class="fa-solid fa-fire text-warning"></i> Contenido & Gaming</span>
+          </span>
+          <span class="friend-badge"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+        </a>
+        <!-- GitHub -->
+        <a class="friend-row" href="https://github.com/gabrielgaray" target="_blank" rel="noopener noreferrer">
+          <span class="friend-avatar fa-gh"><i class="fa-brands fa-github"></i></span>
+          <span class="friend-info">
+            <strong>GitHub Dev</strong>
+            <span class="friend-rank"><i class="fa-solid fa-code-branch"></i> Gabriel Garay</span>
+            <span class="friend-status"><i class="fa-solid fa-laptop-code"></i> Repositorios PWA</span>
+          </span>
+          <span class="friend-badge"><i class="fa-solid fa-arrow-up-right-from-square"></i></span>
+        </a>
+      </div>
+      <div class="friends-footer">
+        <button data-hidratado="false" type="button" data-bs-toggle="modal" data-bs-target="#modalContacto" aria-label="Contacto"><i class="fa-solid fa-envelope"></i></button>
+        <button data-hidratado="false" type="button" data-bs-toggle="modal" data-bs-target="#modalMusica" aria-label="Música"><i class="fa-solid fa-music"></i></button>
+        <button data-hidratado="false" type="button" data-bs-toggle="modal" data-bs-target="#modalHorario" aria-label="Horario"><i class="fa-solid fa-calendar-days"></i></button>
+      </div>
+    </aside>
+
+    <!-- INDICADORES DEL CARRUSEL -->
+    <div class="lobby-dots carousel-indicators">
+      <button data-hidratado="false" type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-label="Foto 1"></button>
+      <button data-hidratado="false" type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Foto 2"></button>
+      <button data-hidratado="false" type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Foto 3"></button>
+    </div>
+
+    <!-- BARRA INFERIOR DE PESTAÑAS + BOTÓN CONTACTO -->
+    <footer class="bottom-bar">
+      <nav class="bottom-tabs" aria-label="Secciones principales">
+        <button data-hidratado="false" class="nav-tab" type="button" data-bs-toggle="modal" data-bs-target="#modalPerfil">
+          <i class="fa-solid fa-user-astronaut"></i><span>Perfil</span>
+        </button>
+        <button data-hidratado="false" class="nav-tab" type="button" data-bs-toggle="modal" data-bs-target="#modalHorario">
+          <i class="fa-solid fa-calendar-days"></i><span>Horario</span>
+        </button>
+        <button data-hidratado="false" class="nav-tab" type="button" data-bs-toggle="modal" data-bs-target="#modalMusica">
+          <i class="fa-solid fa-compact-disc"></i><span>Música</span>
+        </button>
+        <button data-hidratado="false" class="nav-tab" type="button" id="btn-redes" aria-label="Mostrar redes">
+          <i class="fa-solid fa-share-nodes"></i><span>Redes</span>
+        </button>
+      </nav>
+
+      <div class="bottom-right">
+        <button data-hidratado="false" class="play-btn" type="button" data-bs-toggle="modal" data-bs-target="#modalContacto">
+          <span class="play-icon"><i class="fa-solid fa-paper-plane"></i></span>
+          <span class="play-text">Contacto</span>
+        </button>
+      </div>
+    </footer>
+  </div>
+
+  <!-- ==================== MENÚ HAMBURGUESA OFFCANVAS ==================== -->
+  <div class="offcanvas offcanvas-start theme-drawer" tabindex="-1" id="offcanvasNav">
+    <div class="offcanvas-header border-bottom">
+      <h5 class="offcanvas-title"><i class="fa-solid fa-compass me-2 text-cyan"></i>Navegación PWA</h5>
+      <button data-hidratado="false" type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="list-group list-group-flush mb-4">
+        <button data-hidratado="false" class="list-group-item list-group-item-action bg-transparent py-3" data-bs-dismiss="offcanvas" data-bs-toggle="modal" data-bs-target="#modalPerfil">
+          <i class="fa-solid fa-user me-2 text-info"></i>Inicio / Perfil Personal
+        </button>
+        <button data-hidratado="false" class="list-group-item list-group-item-action bg-transparent py-3" data-bs-dismiss="offcanvas" data-bs-toggle="modal" data-bs-target="#modalPasatiempos">
+          <i class="fa-solid fa-dumbbell me-2 text-warning"></i>Gimnasio &amp; Fuerza (6 Días/Sem)
+        </button>
+        <button data-hidratado="false" class="list-group-item list-group-item-action bg-transparent py-3" data-bs-dismiss="offcanvas" data-bs-toggle="modal" data-bs-target="#modalProyectos">
+          <i class="fa-solid fa-code me-2 text-success"></i>Proyectos Destacados (Tipo Yango &amp; PWA)
+        </button>
+        <button data-hidratado="false" class="list-group-item list-group-item-action bg-transparent py-3" data-bs-dismiss="offcanvas" data-bs-toggle="modal" data-bs-target="#modalVideojuegos">
+          <i class="fa-solid fa-gamepad me-2 text-danger"></i>Gaming (Tekken 8 GoD &amp; Colección)
+        </button>
+        <button data-hidratado="false" class="list-group-item list-group-item-action bg-transparent py-3" data-bs-dismiss="offcanvas" data-bs-toggle="modal" data-bs-target="#modalHorario">
+          <i class="fa-solid fa-calendar-days me-2 text-primary"></i>Horario Semanal UPDS
+        </button>
+        <button data-hidratado="false" class="list-group-item list-group-item-action bg-transparent py-3" data-bs-dismiss="offcanvas" data-bs-toggle="modal" data-bs-target="#modalMusica">
+          <i class="fa-solid fa-music me-2 text-purple"></i>Música &amp; Top Canciones
+        </button>
+        <button data-hidratado="false" class="list-group-item list-group-item-action bg-transparent py-3" data-bs-dismiss="offcanvas" data-bs-toggle="modal" data-bs-target="#modalContacto">
+          <i class="fa-solid fa-paper-plane me-2 text-cyan"></i>Contacto Directo &amp; WhatsApp
+        </button>
+      </div>
+
+      <!-- Enlace para cambiar a versión PC -->
+      <div class="p-3 rounded border text-center" style="background: rgba(56, 189, 248, 0.08); border-color: rgba(56, 189, 248, 0.3) !important;">
+        <p class="small mb-2 text-muted">¿Prefieres la vista de escritorio?</p>
+        <a href="index.html?view=desktop" class="btn btn-outline-info btn-sm w-100 fw-bold">
+          <i class="fa-solid fa-desktop me-1"></i> Ir a Versión Computadora (PC)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== VENTANAS MODALES ==================== -->
+
+  <!-- 1. MODAL PERFIL -->
+  <div class="modal fade" id="modalPerfil" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-user me-2 text-cyan"></i>Perfil de Gabriel Alejandro Garay</h5>
+          <button data-hidratado="false" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="profile-card">
+            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80" alt="Gabriel Garay">
+            <div>
+              <h4 class="m-0 fw-bold">Gabriel Alejandro Garay Esprella</h4>
+              <p class="text-cyan fw-semibold mb-1">Tec. Gabriel • Ing. de Sistemas UPDS (7º Semestre)</p>
+              <p class="text-muted small mb-0"><i class="fa-solid fa-location-dot me-1"></i>La Paz, Bolivia • Universidad Privada Domingo Savio</p>
+            </div>
+          </div>
+          <h6 class="fw-bold text-uppercase text-cyan mt-3"><i class="fa-solid fa-bullseye me-1"></i>Sobre Mí & Enfoque</h6>
+          <p class="small text-muted mb-3">
+            Estudiante apasionado de 7º semestre de Ingeniería de Sistemas en la UPDS La Paz. Con experiencia en desarrollo web Full Stack, arquitecturas reactivas PWA, bases de datos relacionales/NoSQL y metodologías ágiles. Combino la disciplina del código con el entrenamiento de pesas 6 días por semana y la alta competencia en eSports (Tekken 8 God of Destruction).
+          </p>
+          <div class="row g-2">
+            <div class="col-6">
+              <div class="p-2 rounded bg-dark border border-secondary small">
+                <strong class="text-cyan d-block"><i class="fa-solid fa-code me-1"></i>Frontend & PWA</strong>
+                <span>HTML5, CSS3, JavaScript ES6+, jQuery, Service Workers, Bootstrap</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-2 rounded bg-dark border border-secondary small">
+                <strong class="text-orange-neon d-block"><i class="fa-solid fa-server me-1"></i>Backend & Datos</strong>
+                <span>PHP, MySQL, SQL Server, Node.js, C#, REST APIs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button data-hidratado="false" type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. MODAL GIMNASIO & PASATIEMPOS -->
+  <div class="modal fade" id="modalPasatiempos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-dumbbell me-2 text-warning"></i>Gimnasio &amp; Fuerza (6 Días/Sem)</h5>
+          <button data-hidratado="false" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center mb-3">
+            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Gimnasio" class="img-fluid rounded border mb-2" style="max-height: 180px; width: 100%; object-fit: cover;">
+            <h5 class="fw-bold text-warning m-0">Constancia, Sobrecarga Progresiva y Salud</h5>
+          </div>
+          <p class="small text-muted mb-3">
+            El gimnasio es uno de los pilares de mi vida diaria. Entreno fuerza y musculación <strong>6 días por semana</strong> siguiendo un esquema de división muscular estructurado (Push / Pull / Legs), priorizando la sobrecarga progresiva, la técnica estricta y una nutrición balanceada.
+          </p>
+          <div class="list-group list-group-flush small mb-3">
+            <div class="list-group-item bg-transparent text-white border-secondary px-0">
+              <strong class="text-cyan"><i class="fa-solid fa-check-circle me-1"></i>Lunes & Jueves (Push):</strong> Pecho, Hombro anterior/lateral y Tríceps pesado.
+            </div>
+            <div class="list-group-item bg-transparent text-white border-secondary px-0">
+              <strong class="text-cyan"><i class="fa-solid fa-check-circle me-1"></i>Martes & Viernes (Pull):</strong> Espalda dorsal, Trapecios, Deltoides posterior y Bíceps.
+            </div>
+            <div class="list-group-item bg-transparent text-white border-secondary px-0">
+              <strong class="text-cyan"><i class="fa-solid fa-check-circle me-1"></i>Miércoles & Sábado (Legs):</strong> Cuádriceps, Isquiotibiales, Glúteos y Gemelos.
+            </div>
+            <div class="list-group-item bg-transparent text-white border-secondary px-0">
+              <strong class="text-warning"><i class="fa-solid fa-bed me-1"></i>Domingo:</strong> Descanso activo y recuperación muscular.
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button data-hidratado="false" type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. MODAL PROYECTOS -->
+  <div class="modal fade" id="modalProyectos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-code me-2 text-success"></i>Proyectos Destacados de Gabriel</h5>
+          <button data-hidratado="false" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex flex-column gap-3">
+            <!-- Proyecto 1: Tipo Yango -->
+            <div class="p-3 rounded border" style="background: rgba(30, 41, 59, 0.5); border-color: #334155 !important;">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <h6 class="fw-bold text-cyan m-0"><i class="fa-solid fa-truck-fast me-1"></i>Sistema de Pedidos de Oficios (Estilo Yango)</h6>
+                <span class="badge bg-warning text-dark">Destacado</span>
+              </div>
+              <p class="small text-muted mb-2">
+                Plataforma de servicios bajo demanda que adapta el modelo de transporte (Uber/Yango) a la solicitud en tiempo real de oficios técnicos del hogar (plomería, electricidad, cerrajería, pintura) con cotizaciones inmediatas y panel administrativo.
+              </p>
+              <div class="d-flex gap-1 flex-wrap">
+                <span class="badge bg-dark border text-info">PHP / MySQL</span>
+                <span class="badge bg-dark border text-info">JavaScript AJAX</span>
+                <span class="badge bg-dark border text-info">On-Demand</span>
+              </div>
+            </div>
+
+            <!-- Proyecto 2: Gestor de Inventarios -->
+            <div class="p-3 rounded border" style="background: rgba(30, 41, 59, 0.5); border-color: #334155 !important;">
+              <h6 class="fw-bold text-success mb-1"><i class="fa-solid fa-boxes-stacked me-1"></i>Gestor de Inventarios & Ventas en Tiempo Real</h6>
+              <p class="small text-muted mb-2">
+                Sistema modular para control de existencias, cálculo automatizado de márgenes de ganancia, alertas de stock mínimo y reportes financieros dinámicos con seguridad de sesión y permisos basados en roles.
+              </p>
+              <div class="d-flex gap-1 flex-wrap">
+                <span class="badge bg-dark border text-success">Full Stack</span>
+                <span class="badge bg-dark border text-success">SQL Server</span>
+                <span class="badge bg-dark border text-success">Reportes PDF/Excel</span>
+              </div>
+            </div>
+
+            <!-- Proyecto 3: Arquitectura PWA Cascada -->
+            <div class="p-3 rounded border" style="background: rgba(30, 41, 59, 0.5); border-color: #334155 !important;">
+              <h6 class="fw-bold text-cyan mb-1"><i class="fa-solid fa-mobile-screen-button me-1"></i>Arquitectura PWA Cascada con jQuery</h6>
+              <p class="small text-muted mb-2">
+                Implementación oficial de filtros reactivos de 3 niveles, hidratación del DOM sin redibujado, almacenamiento offline mediante Cache API y Service Workers para rendimiento ultra veloz.
+              </p>
+              <div class="d-flex gap-1 flex-wrap">
+                <span class="badge bg-dark border text-cyan">PWA</span>
+                <span class="badge bg-dark border text-cyan">Service Worker</span>
+                <span class="badge bg-dark border text-cyan">jQuery 3.7</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button data-hidratado="false" type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. MODAL VIDEOJUEGOS (GAMING) -->
+  <div class="modal fade" id="modalVideojuegos" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-gamepad me-2 text-danger"></i>Gaming • Tekken 8 God of Destruction</h5>
+          <button data-hidratado="false" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Filtro de Categorías -->
+          <div class="d-flex gap-2 flex-wrap mb-3">
+            <button data-hidratado="false" class="game-filter-btn active" data-filter="todos">Todos</button>
+            <button data-hidratado="false" class="game-filter-btn" data-filter="lucha">Lucha Competitiva</button>
+            <button data-hidratado="false" class="game-filter-btn" data-filter="accion">Acción / Hack &amp; Slash</button>
+            <button data-hidratado="false" class="game-filter-btn" data-filter="aventura">Terror &amp; Aventura</button>
+          </div>
+
+          <div class="row g-2">
+            <!-- Tekken 8 (Destacado Rey) -->
+            <div class="col-6 col-md-4 game-card" data-categoria="lucha">
+              <img src="https://cdn.akamai.steamstatic.com/steam/apps/1778820/header.jpg" alt="Tekken 8">
+              <div class="game-card-body">
+                <span class="badge bg-warning text-dark mb-1">Rango Máximo GoD</span>
+                <strong class="d-block text-truncate" style="font-size: 0.85rem;">Tekken 8</strong>
+                <small class="text-muted d-block" style="font-size: 0.72rem;">Main: Jin & Kazuya Mishima</small>
+              </div>
+            </div>
+
+            <!-- God of War Ragnarök -->
+            <div class="col-6 col-md-4 game-card" data-categoria="accion">
+              <img src="https://cdn.akamai.steamstatic.com/steam/apps/1593500/header.jpg" alt="God of War Ragnarök">
+              <div class="game-card-body">
+                <span class="badge bg-primary mb-1">Acción / Mitología</span>
+                <strong class="d-block text-truncate" style="font-size: 0.85rem;">God of War Ragnarök</strong>
+                <small class="text-muted d-block" style="font-size: 0.72rem;">Kratos y Atreus en los 9 Reinos</small>
+              </div>
+            </div>
+
+            <!-- Resident Evil 4 Remake -->
+            <div class="col-6 col-md-4 game-card" data-categoria="aventura">
+              <img src="https://upload.wikimedia.org/wikipedia/en/d/db/Infamous_2.png" alt="inFamous 2 / Resident Evil">
+              <div class="game-card-body">
+                <span class="badge bg-danger mb-1">Survival Horror</span>
+                <strong class="d-block text-truncate" style="font-size: 0.85rem;">Resident Evil 4 & inFamous</strong>
+                <small class="text-muted d-block" style="font-size: 0.72rem;">Clásicos de Aventura y Poderes</small>
+              </div>
+            </div>
+
+            <!-- Devil May Cry 5 -->
+            <div class="col-6 col-md-4 game-card" data-categoria="accion">
+              <img src="https://cdn.akamai.steamstatic.com/steam/apps/601150/header.jpg" alt="Devil May Cry 5">
+              <div class="game-card-body">
+                <span class="badge bg-info text-dark mb-1">Hack & Slash</span>
+                <strong class="d-block text-truncate" style="font-size: 0.85rem;">Devil May Cry 5</strong>
+                <small class="text-muted d-block" style="font-size: 0.72rem;">Combos SSS con Dante y Vergil</small>
+              </div>
+            </div>
+
+            <!-- Half-Life 2 -->
+            <div class="col-6 col-md-4 game-card" data-categoria="aventura">
+              <img src="https://cdn.akamai.steamstatic.com/steam/apps/220/header.jpg" alt="Half-Life 2">
+              <div class="game-card-body">
+                <span class="badge bg-secondary mb-1">Ciencia Ficción</span>
+                <strong class="d-block text-truncate" style="font-size: 0.85rem;">Half-Life 2</strong>
+                <small class="text-muted d-block" style="font-size: 0.72rem;">Gordon Freeman & Ciudad 17</small>
+              </div>
+            </div>
+
+            <!-- Mortal Kombat 1 -->
+            <div class="col-6 col-md-4 game-card" data-categoria="lucha">
+              <img src="https://cdn.akamai.steamstatic.com/steam/apps/730/header.jpg" alt="Lucha Competitiva">
+              <div class="game-card-body">
+                <span class="badge bg-warning text-dark mb-1">Lucha & eSports</span>
+                <strong class="d-block text-truncate" style="font-size: 0.85rem;">Mortal Kombat & CS2</strong>
+                <small class="text-muted d-block" style="font-size: 0.72rem;">Juegos Competitivos Online</small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button data-hidratado="false" type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. MODAL HORARIO UPDS -->
+  <div class="modal fade" id="modalHorario" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-calendar-days me-2 text-primary"></i>Horario Semanal • UPDS &amp; Gym</h5>
+          <button data-hidratado="false" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table table-dark table-striped table-bordered text-center small m-0">
+              <thead>
+                <tr class="table-primary text-dark">
+                  <th>Día</th>
+                  <th>Mañana (UPDS Sistemas)</th>
+                  <th>Tarde (Gym 6 Días)</th>
+                  <th>Noche (Proyectos / Gaming)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Lunes</strong></td>
+                  <td>Sistemas Distribuidos</td>
+                  <td>Entrenamiento Push (Pecho/Tríceps)</td>
+                  <td>Desarrollo PWA & Código</td>
+                </tr>
+                <tr>
+                  <td><strong>Martes</strong></td>
+                  <td>Redes Avanzadas & Seguridad</td>
+                  <td>Entrenamiento Pull (Espalda/Bíceps)</td>
+                  <td>Tekken 8 Online Ranked</td>
+                </tr>
+                <tr>
+                  <td><strong>Miércoles</strong></td>
+                  <td>Taller de Base de Datos SQL</td>
+                  <td>Entrenamiento Legs (Pierna Pesada)</td>
+                  <td>Estudio & Proyectos UPDS</td>
+                </tr>
+                <tr>
+                  <td><strong>Jueves</strong></td>
+                  <td>Ingeniería de Software II</td>
+                  <td>Entrenamiento Push (Hipertrofia)</td>
+                  <td>Revisión de Arquitecturas</td>
+                </tr>
+                <tr>
+                  <td><strong>Viernes</strong></td>
+                  <td>Programación Web Avanzada</td>
+                  <td>Entrenamiento Pull (Espalda/Brazos)</td>
+                  <td>Gaming Competitivo</td>
+                </tr>
+                <tr>
+                  <td><strong>Sábado</strong></td>
+                  <td>Laboratorios y Prácticas</td>
+                  <td>Entrenamiento Pierna & Fuerza</td>
+                  <td>Tiempo Libre & Música</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button data-hidratado="false" type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. MODAL MÚSICA -->
+  <div class="modal fade" id="modalMusica" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-music me-2 text-purple"></i>Catálogo de Música de Gabriel</h5>
+          <button data-hidratado="false" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <label for="select-genero-mobile" class="form-label small fw-bold text-cyan">Selecciona el Género / Estilo:</label>
+          <select id="select-genero-mobile" class="form-field mb-3">
+            <option value="cuco">Cuco (Indie Pop & Dream Pop - Programar y Chill)</option>
+            <option value="gym-phonk">Phonk & Gym Workout (Fuerza y Alta Intensidad)</option>
+            <option value="soda-stereo">Soda Stereo & Gustavo Cerati (Rock Clásico en Español)</option>
+            <option value="romantica">Baladas Románticas (Chayanne, Ricardo Arjona, José José)</option>
+          </select>
+
+          <!-- Tarjeta dinámica de información del género -->
+          <div id="info-genero-mobile"></div>
+
+          <h6 class="fw-bold text-uppercase text-cyan small mb-2"><i class="fa-solid fa-fire me-1"></i>Top 5 Canciones de Referencia:</h6>
+          <!-- Lista dinámica -->
+          <div id="lista-canciones-mobile"></div>
+        </div>
+        <div class="modal-footer">
+          <button data-hidratado="false" type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. MODAL CONTACTO -->
+  <div class="modal fade" id="modalContacto" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"><i class="fa-solid fa-paper-plane me-2 text-cyan"></i>Contacto Directo con Gabriel</h5>
+          <button data-hidratado="false" type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="form-alert-container-mobile"></div>
+          <form id="contact-form-mobile" novalidate autocomplete="on">
+            <div class="row g-2">
+              <div class="col-6">
+                <label for="campo-nombre" class="form-label small">Nombre *</label>
+                <input type="text" class="form-field" id="campo-nombre" placeholder="Tu nombre" required>
+              </div>
+              <div class="col-6">
+                <label for="campo-apellidos" class="form-label small">Apellidos</label>
+                <input type="text" class="form-field" id="campo-apellidos" placeholder="Tus apellidos">
+              </div>
+              <div class="col-6">
+                <label for="campo-correo" class="form-label small">Correo *</label>
+                <input type="email" class="form-field" id="campo-correo" placeholder="correo@ejemplo.com" required>
+              </div>
+              <div class="col-6">
+                <label for="campo-telefono" class="form-label small">WhatsApp / Celular *</label>
+                <input type="tel" class="form-field" id="campo-telefono" placeholder="Ej: 60120550" required>
+              </div>
+              <div class="col-12">
+                <label for="campo-motivo" class="form-label small">Motivo del contacto *</label>
+                <select class="form-field" id="campo-motivo" required>
+                  <option value="">Selecciona...</option>
+                  <option value="Propuesta de Proyecto / Desarrollo Web">Propuesta de Proyecto / Desarrollo Web</option>
+                  <option value="Consulta Académica / UPDS">Consulta Académica / UPDS</option>
+                  <option value="Gimnasio / Rutina de Fuerza">Gimnasio / Rutina de Fuerza</option>
+                  <option value="Gaming / Tekken 8">Gaming / Tekken 8</option>
+                  <option value="Otro">Otro asunto</option>
+                </select>
+              </div>
+              <div class="col-12">
+                <label for="campo-mensaje" class="form-label small d-flex justify-content-between">
+                  <span>Mensaje *</span>
+                  <small class="text-muted" id="contador-mensaje">0/500</small>
+                </label>
+                <textarea class="form-field" id="campo-mensaje" rows="3" maxlength="500" placeholder="Escribe tu mensaje aquí..." required></textarea>
+              </div>
+
+              <!-- Honeypot anti-bots -->
+              <div class="hp-field" aria-hidden="true">
+                <input type="text" id="campo-web" name="web" tabindex="-1" autocomplete="off">
+              </div>
+
+              <div class="col-12">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="campo-terminos" checked required>
+                  <label class="form-check-label small text-muted" for="campo-terminos">
+                    Acepto que mis datos se utilicen para contactar a Gabriel Garay vía WhatsApp.
+                  </label>
+                </div>
+              </div>
+
+              <div class="col-12 d-flex justify-content-between align-items-center mt-3">
+                <small class="text-muted">* Obligatorio</small>
+                <button data-hidratado="false" type="submit" class="btn btn-warning fw-bold px-3 btn-sm" id="btn-enviar">
+                  <i class="fa-solid fa-paper-plane me-1"></i> Enviar Mensaje
+                </button>
+              </div>
+            </div>
+          </form>
+
+          <hr class="my-3">
+
+          <div class="text-center">
+            <span class="small text-muted d-block mb-2">Canal rápido WhatsApp directo:</span>
+            <a href="https://wa.me/59160120550" target="_blank" rel="noopener noreferrer" class="btn btn-success btn-sm fw-bold">
+              <i class="fa-brands fa-whatsapp me-1"></i> WhatsApp: +591 60120550
+            </a>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button data-hidratado="false" type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <!-- Lógica y PWA de la versión Móvil -->
+  <script src="mobile-script.js"></script>
+
+</body>
+</html>
+
